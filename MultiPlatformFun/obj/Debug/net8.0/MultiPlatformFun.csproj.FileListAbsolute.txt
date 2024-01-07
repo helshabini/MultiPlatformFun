@@ -46,3 +46,4 @@
 /Users/haelshab/Source/MultiPlatformFun/MultiPlatformFun/obj/Debug/net8.0/MultiPlatformFun.pdb
 /Users/haelshab/Source/MultiPlatformFun/MultiPlatformFun/obj/Debug/net8.0/MultiPlatformFun.genruntimeconfig.cache
 /Users/haelshab/Source/MultiPlatformFun/MultiPlatformFun/obj/Debug/net8.0/ref/MultiPlatformFun.dll
+/Users/haelshab/Source/MultiPlatformFun/MultiPlatformFun/obj/Debug/net8.0/MultiPlatformFun.sourcelink.json

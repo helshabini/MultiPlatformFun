@@ -21,6 +21,7 @@ public class Worker : BackgroundService
             {
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
                 _logger.LogInformation("ServiceInfo: {serviceInfo}", _service.ServiceInfo);
+                _service.DoSomething();
             }
 
             await Task.Delay(1000, stoppingToken);
