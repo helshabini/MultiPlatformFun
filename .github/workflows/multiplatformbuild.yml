@@ -5,20 +5,42 @@ on:
   pull_request:
 
 jobs:
+
+  prepare:
+    runs-on: ubuntu-latest
+    outputs: 
+      upload_url: ${{ steps.release.outputs.upload_url }}
+    steps:
+    - name: Release
+      uses: actions/create-release@v1
+      id: release
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        draft: false
+        prerelease: false
+        release_name: 'multiplatformfun-${{github.ref_name}}'
+        tag_name: ${{ github.ref }}
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+  
   build:
     strategy:
       matrix:
         include:
           - os: windows-latest
             runtime: win-x64
+            binary: "MultiPlatformFun.exe"
           - os: ubuntu-latest
             runtime: linux-x64
+            binary: "MultiPlatformFun"
           - os: ubuntu-latest
             runtime: linux-arm64
+            binary: "MultiPlatformFun"
           - os: macos-latest
             runtime: osx-arm64
+            binary: "MultiPlatformFun"
     runs-on: ${{ matrix.os }}
-
+    needs: prepare
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -33,4 +55,14 @@ jobs:
     - name: Build
       run: |
         dotnet publish "MultiPlatformFun/MultiPlatformFun.csproj" -o ${{ github.workspace }}/publish -r ${{ matrix.runtime }} -p:PublishSingleFile=true --self-contained true
-        
+
+    - name: Upload
+      uses: actions/upload-release-asset@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ needs.prepare.outputs.upload_url }}
+        asset_path: ${{ github.workspace }}/publish/${{ matrix.binary }}
+        asset_name: binary-${{ matrix.runtime }}
+        asset_content_type: application/octet-stream
